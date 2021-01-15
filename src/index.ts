@@ -1,6 +1,4 @@
 import express, { Request, Response } from 'express'
-require('dotenv').config()
-
 
 const app = express()
 const port: Number = Number(process.env.PORT) || 8080
