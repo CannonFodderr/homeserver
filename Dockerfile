@@ -1,7 +1,31 @@
-FROM node@sha256:2ae9624a39ce437e7f58931a5747fdc60224c6e40f8980db90728de58e22af7c
+FROM ubuntu:18.04@sha256:fd25e706f3dea2a5ff705dbc3353cf37f08307798f3e360a13e9385840f73fb3
+
 ENV NODE_ENV production
-WORKDIR /usr/src/app
-COPY . /usr/src/app
-RUN npm ci --only=production
-USER node
-CMD "npm" "start"
+ARG USER=idanizhaki
+ARG PW=testpass
+ARG UID=1000
+
+RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | \chpasswd
+
+COPY entrypoint.sh /home/idanizhaki
+RUN chown idanizhaki /home/idanizhaki
+RUN chmod +x /home/idanizhaki/entrypoint.sh
+
+
+WORKDIR /home/idanizhaki/app
+COPY ./dist /home/idanizhaki/app
+
+RUN chown idanizhaki -R /home/idanizhaki
+RUN chmod +x /home/idanizhaki/entrypoint.sh
+RUN chown idanizhaki /bin
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y curl
+RUN curl -sL https://deb.nodesource.com/setup_15.x
+RUN apt-get install -y build-essential nodejs
+
+USER ${USER}
+EXPOSE 8080
+
+ENTRYPOINT [ "/home/idanizhaki/entrypoint.sh" ]
+# CMD ["/home/idanizhaki/entrypoint.sh"]
+
