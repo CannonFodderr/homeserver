@@ -1,3 +1,13 @@
+FROM node:12-alpine AS Builder
+RUN mkdir -p /home/idanizhaki/app/node_modules /home/node/app/dist && chown -R node:node /home/node/app
+WORKDIR /home/idanizhaki/app
+COPY package*.json ./
+USER idanizhaki
+RUN npm install
+COPY --chown=idanizhaki:idanizhaki . .
+RUN npm run build
+
+
 FROM ubuntu:18.04@sha256:fd25e706f3dea2a5ff705dbc3353cf37f08307798f3e360a13e9385840f73fb3
 
 ENV NODE_ENV production
@@ -27,5 +37,3 @@ USER ${USER}
 EXPOSE 8080
 
 ENTRYPOINT [ "/home/idanizhaki/entrypoint.sh" ]
-# CMD ["/home/idanizhaki/entrypoint.sh"]
-
