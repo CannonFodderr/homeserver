@@ -1,0 +1,37 @@
+openapi: '3.0.2'
+info:
+  title: Home server
+  version: '1.0'
+servers:
+  - url: https://localhost:8080
+    variables:
+      port:
+        enum:
+          - "8080"
+        default: "8080"
+paths:
+  /:
+    get:
+      responses:
+        '200':
+          description: OK
+  /file/detect:
+    post:
+      description: 'Detect file mime type'
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          "text/html": {
+            schema: {
+              type: object,
+              required: [
+                "url"
+              ],
+              example: {
+                url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Google_Chrome_icon_%28September_2014%29.svg/220px-Google_Chrome_icon_%28September_2014%29.svg.png"
+              }
+            }  
+          }
+          
