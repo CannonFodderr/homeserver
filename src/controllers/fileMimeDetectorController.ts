@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 
 const router = Router()
 
@@ -8,8 +8,8 @@ interface fileDetectRequest {
 }
 
 interface ResponseHeaders {
-    'content-type'?: string,
-    'content-length'?: string
+    'fileType'?: string,
+    'fileSize'?: string
 }
 
 async function requestHeadersFormUrl (url:string) {
@@ -17,7 +17,11 @@ async function requestHeadersFormUrl (url:string) {
 
         const res = (await axios.head(url, {method: 'HEAD'}))
         if (res?.headers) {
-            return res.headers
+            const {
+                "content-type":fileType = "",
+                "content-length": fileSize = ""
+            } = res.headers
+            return {fileType, fileSize}
         }
         return null
     }
@@ -33,14 +37,10 @@ router.post('/detect', async (req: Request, res:Response) => {
         if (!headers) {
             return res.sendStatus(404)
         }
-        const {
-            "content-type":fileType = "",
-            "content-length": fileSize = ""
-        } = headers
 
         res
         .status(200)
-        .json({fileType, fileSize})
+        .json(headers)
     } else {
         res.sendStatus(500)
     }
