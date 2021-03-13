@@ -15,7 +15,7 @@ interface ResponseHeaders {
 async function requestHeadersFormUrl (url:string) {
     try {
 
-        const res = (await axios.head(url, {method: 'HEAD'}))
+        const res = await axios.head(url, {method: 'HEAD'})
         if (res?.headers) {
             const {
                 "content-type":fileType = "",
