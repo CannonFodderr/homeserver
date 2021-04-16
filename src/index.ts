@@ -5,26 +5,18 @@ import RegisterController from './controllers/RegisterController'
 import bodyParser from 'body-parser'
 import config from './config/config'
 import cors from 'cors'
-import mongodb, { MongoClient } from 'mongodb'
-
-const connectionString = `${config.MONGODB_HOST}/${config.MONGODB_DB_NAME}`
-
-mongodb.connect(connectionString, {
-    "useUnifiedTopology": true,
-    "auth": {
-        "user": config.MONGODB_USER,
-        "password": config.MONGODB_PASSWORD
-    }
-})
-.then((connection) => {
-    console.log(`Mongodb connected: ${connection.isConnected()}`)
-})
-.catch((err) => {
-    console.error(`MongoDB connection error: ${err}`)
-})
+import cookieParser from 'cookie-parser'
+import MongoDbStore from './store/MongoDbStore'
+// import redisStore from './store/RedisStore'
 
 const app = express()
 const port: Number = Number(config.PORT) || 8080
+
+
+MongoDbStore.connect()
+.then((connection) => {
+    console.log("Connected to mongoDB: ", connection?.isConnected())
+})
 
 const corsOptions = {
     "credentials": true,
@@ -33,6 +25,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 app.use(bodyParser.json())
+app.use(cookieParser())
 
 app.get('/', (req: Request, res: Response) => {
     res.send("Hello from home server")
