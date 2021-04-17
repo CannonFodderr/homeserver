@@ -8,6 +8,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import MongoDbStore from './store/MongoDbStore'
 // import redisStore from './store/RedisStore'
+import {Mailer} from './services/Mailer'
 
 const app = express()
 const port: Number = Number(config.PORT) || 8080
@@ -17,6 +18,9 @@ MongoDbStore.connect()
 .then((connection) => {
     console.log("Connected to mongoDB: ", connection?.isConnected())
 })
+
+// const mailer = new Mailer('izhaki.idan@gmail.com', 'test', '', '<h1>Testing 123</h1>')
+// mailer.sendMail()
 
 const corsOptions = {
     "credentials": true,
