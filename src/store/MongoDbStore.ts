@@ -50,7 +50,7 @@ class MongoDbStore {
         const collection = this.getDbCollection(collectionName)
         if (!collection) return null
         return await collection.deleteOne({"_id": objectId })
-    } 
+    }
 }
 
 

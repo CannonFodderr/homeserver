@@ -8,5 +8,6 @@ export interface UserSchema {
     email: string,
     password: string,
     phoneNumber: string,
-    name?: UserName
+    name?: UserName,
+    validated?: boolean
 }
