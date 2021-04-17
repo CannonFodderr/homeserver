@@ -1,6 +1,6 @@
 {
   "name": "home-server",
-  "version": "1.0.0",
+  "version": "21.04.1701",
   "description": "Personal home server",
   "main": "./dist/index.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "@types/express": "^4.17.11",
     "@types/ioredis": "^4.22.3",
     "@types/jsonwebtoken": "^8.5.1",
+    "@types/md5": "^2.3.0",
     "@types/mongodb": "^3.6.10",
     "@types/node": "^14.14.21",
     "@types/nodemailer": "^6.4.1",
