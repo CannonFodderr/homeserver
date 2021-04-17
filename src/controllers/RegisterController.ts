@@ -52,7 +52,7 @@ class RegController {
         const deletedUser = await getDbCollection('users')?.findOneAndDelete({
             _id: new ObjectId(id),
         })
-        console.log(deletedUser)
+        
         if (deletedUser && deletedUser.ok && deletedUser.value) {
             return res.sendStatus(200)
         }
