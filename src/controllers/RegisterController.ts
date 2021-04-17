@@ -1,4 +1,5 @@
-import { UserSchema } from '@/schemas/User'
+import { UserSchema } from '@/schemas/UserSchema'
+import { ObjectId } from 'bson'
 import { Router, Request, Response } from 'express'
 import MongoDbStore from '../store/MongoDbStore'
 
@@ -28,7 +29,7 @@ class RegController {
     private registerUser = async (req: Request, res: Response) => {
         const { body } = req
         const { email = "", password ="" }:UserRegistrationPayload = body
-
+        
         if (this.isValidCreateUserPayload(body)) {
             const foundUser = await getDbCollection('users')?.findOne({ email: email })
             if (!foundUser) {
@@ -45,11 +46,21 @@ class RegController {
     }
     private unregisterUser = async (req: Request, res: Response) => {
         const { body } = req
-        const {_id}:any = body
+        const {_id:id}:any = body
+        if (!id) return res.sendStatus(400)
 
-        const deletedUser = await getDbCollection('users')?.deleteOne({ _id })
-        console.log({deletedUser})
-        res.send(deletedUser)
+        const deletedUser = await getDbCollection('users')?.findOneAndDelete({
+            _id: new ObjectId(id),
+        })
+        console.log(deletedUser)
+        if (deletedUser && deletedUser.ok && deletedUser.value) {
+            return res.sendStatus(200)
+        }
+        
+        if (deletedUser && !deletedUser.value) {
+            return res.sendStatus(404)
+        }
+        res.sendStatus(500)
 
 
     }
