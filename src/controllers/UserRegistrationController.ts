@@ -1,23 +1,24 @@
-import { UserSchema } from '../schemas/UserSchema'
-import { Mailer } from '../services/Mailer'
-import generateAccountValidationEmail from '../templates/emails/AccountValidate'
-import { ObjectId } from 'bson'
-import { Router, Request, Response } from 'express'
+import { UserSchema } from "../schemas/UserSchema"
+import { Mailer } from "../services/Mailer"
+import generateAccountValidationEmail from "../templates/emails/AccountValidate"
+import { ObjectId } from "bson"
+import { Router, Request, Response } from "express"
 import MongoDbStore from '../store/MongoDbStore'
 
 const { getDbCollection, insertOneToDbCollection } = MongoDbStore
+
 interface UserRegistrationPayload {
     email: string,
     password: string
 }
 
-class RegController {
+export class UserRegistrationController {
     private _router: Router
-    constructor () {
+    constructor (router: Router) {
         this._router = Router()
-        this.initRouter()
+        this.initRegRouter()
     }
-    private initRouter () {
+    private initRegRouter () {
         this._router.post('/register', this.registerUser)
         this._router.post('/unregister', this.unregisterUser)
         this._router.get('/validate/:accountId', this.validateAccount)
@@ -35,7 +36,7 @@ class RegController {
             return await new Mailer(email, 'Validate your account', '', template).sendMail()
         }
     }
-    private registerUser = async (req: Request, res: Response) => {
+    public registerUser = async (req: Request, res: Response) => {
         const { body } = req
         const { email = "", password ="" }:UserRegistrationPayload = body
         
@@ -55,7 +56,7 @@ class RegController {
         }
         return res.sendStatus(400)
     }
-    private unregisterUser = async (req: Request, res: Response) => {
+    public unregisterUser = async (req: Request, res: Response) => {
         const { body } = req
         const {_id:id}:any = body
         if (!id) return res.sendStatus(400)
@@ -72,10 +73,8 @@ class RegController {
             return res.sendStatus(404)
         }
         res.sendStatus(500)
-
-
     }
-    private async validateAccount (req: Request, res: Response) {
+    public async validateAccount (req: Request, res: Response) {
         const { accountId } = req.params
         const collection = await getDbCollection('users')
         if (!collection) return res.sendStatus(500)
@@ -102,11 +101,8 @@ class RegController {
         }
         res.sendStatus(200)
     }
+
     public getRouter () {
         return this._router
     }
 }
-
-
-const controller = new RegController()
-export default controller.getRouter()

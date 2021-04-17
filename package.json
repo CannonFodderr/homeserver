@@ -1,6 +1,6 @@
 {
   "name": "home-server",
-  "version": "21.04.1701",
+  "version": "21.04.1702",
   "description": "Personal home server",
   "main": "./dist/index.js",
   "scripts": {
