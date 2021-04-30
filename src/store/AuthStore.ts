@@ -3,7 +3,7 @@ import { Secret } from 'jsonwebtoken'
 import config from '../config/config'
 import jwt from 'jsonwebtoken'
 
-interface JWTSignOptions {
+export interface JWTSignOptions {
     algorithm?: jwt.Algorithm
     expiration?: string,
     audience?: string
@@ -20,35 +20,43 @@ class AuthStore {
         }
     }
     generateKeyPair = () => {
-        generateKeyPair('rsa', {
-            modulusLength: 4096,
-            publicKeyEncoding: {
-                type: 'spki',
-                format: 'pem'
-            },
-            privateKeyEncoding: {
-                type: 'pkcs8',
-                format: 'pem',
-                cipher: 'aes-256-cbc',
-                passphrase: config.PRIVATE_KEY_PASSPHRASE
-            }
-            }, (err, publicKey, privateKey) => {
-                if (err) {
-                    return console.error(err)
+        return new Promise ((resolve) => {
+            generateKeyPair('rsa', {
+                modulusLength: 4096,
+                publicKeyEncoding: {
+                    type: 'spki',
+                    format: 'pem'
+                },
+                privateKeyEncoding: {
+                    type: 'pkcs8',
+                    format: 'pem',
+                    cipher: 'aes-256-cbc',
+                    passphrase: config.PRIVATE_KEY_PASSPHRASE
                 }
-                this.privateKey = privateKey
-                this.publicKey = publicKey
-            })
+                }, (err, publicKey, privateKey) => {
+                    if (err) {
+                        console.error(err)
+                        resolve(false)
+                    }
+                    this.privateKey = privateKey
+                    this.publicKey = publicKey
+                    resolve(true)
+                })
+        })
+
     }
     getPrivateKey () {
         return this.privateKey.toString()
     }
     getSignedJWT (payload:{}, options: JWTSignOptions) {
+        
         const {
             expiration = '5m',
             algorithm = 'RS256',
             audience = 'test'
         } = options
+
+        
         return new Promise((resolve, reject) => {
             jwt.sign(
                 payload,
