@@ -35,6 +35,14 @@ class MongoDbStore {
             return null
         })
     }
+    public async createIndex (collection = '', index = {}, indexOptions = {}) {
+        const foundCollection = await this.getDbCollection(collection)
+        if (!foundCollection) return null
+
+        const result = await foundCollection.createIndex(index, indexOptions)
+        console.log(`Collection ${collection} created index: ${result}`)
+        return result
+    }
     public getDbCollection = (collection = '') => {
         if (!this._client || !collection) return null
         return this._client.db(config.MONGODB_DB_NAME).collection(collection)

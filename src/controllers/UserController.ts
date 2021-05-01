@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import {UserRegistrationController} from './UserRegistrationController'
-
 class UserController {
     private _router: Router
     constructor () {

@@ -19,6 +19,7 @@ export class UserRegistrationController {
         this._router = Router()
         this.initRegRouter()
     }
+    
     private initRegRouter () {
         this._router.post('/register', this.registerUser)
         this._router.post('/unregister', this.unregisterUser)
@@ -80,7 +81,7 @@ export class UserRegistrationController {
         const { accountId } = req.params
         const collection = await getDbCollection('users')
         if (!collection) return res.sendStatus(500)
-        const dbFilter = { _id: new ObjectId(accountId)}
+        const dbFilter = { _id: new ObjectId(accountId) }
         const foundUserAccount = await collection.findOne(dbFilter)
         
         if (!foundUserAccount) {

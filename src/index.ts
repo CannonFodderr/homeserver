@@ -14,11 +14,12 @@ const port: Number = Number(config.PORT) || 8080
 
 
 MongoDbStore.connect()
-.then((connection) => {
+.then(async (connection) => {
     console.log("Connected to mongoDB: ", connection?.isConnected())
     if (!connection) {
         return process.exit()
     }
+    await MongoDbStore.createIndex('users', { email: 1 }, { unique: true })
 })
 
 
