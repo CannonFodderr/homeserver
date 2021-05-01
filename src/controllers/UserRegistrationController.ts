@@ -4,6 +4,7 @@ import generateAccountValidationEmail from "../templates/emails/AccountValidate"
 import { ObjectId } from "bson"
 import { Router, Request, Response } from "express"
 import MongoDbStore from '../store/MongoDbStore'
+import md5 from "md5"
 
 const { getDbCollection, insertOneToDbCollection } = MongoDbStore
 
@@ -38,12 +39,13 @@ export class UserRegistrationController {
     }
     public registerUser = async (req: Request, res: Response) => {
         const { body } = req
-        const { email = "", password ="" }:UserRegistrationPayload = body
+        const { email = "", password = "" }:UserRegistrationPayload = body
+        const md5password = md5(password)
         
         if (this.isValidCreateUserPayload(body)) {
             const foundUser = await getDbCollection('users')?.findOne({ email: email })
             if (!foundUser) {
-                const inserted = await insertOneToDbCollection('users', {email, password, validated: false})
+                const inserted = await insertOneToDbCollection('users', {email, password: md5password, validated: false})
                 if (!inserted) {
                     return res.sendStatus(500)
                 }
