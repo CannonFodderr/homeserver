@@ -15,7 +15,7 @@ interface UserRegistrationPayload {
 
 export class UserRegistrationController {
     private _router: Router
-    constructor (router: Router) {
+    constructor () {
         this._router = Router()
         this.initRegRouter()
     }

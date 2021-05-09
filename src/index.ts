@@ -8,9 +8,11 @@ import config from './config/config'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import MongoDbStore from './store/MongoDbStore'
+import UploadController from './controllers/UploadController'
 // import redisStore from './store/RedisStore'
 const app = express()
 const port: Number = Number(config.PORT) || 8080
+
 
 
 MongoDbStore.connect()
@@ -40,6 +42,6 @@ app.use('/timestamp', TimestampController)
 app.use('/file', FileMimeDetectController)
 app.use('/auth', AuthController)
 app.use('/user', UserController)
-
+app.use('/upload', UploadController.getRouter())
 
 app.listen(port, () => console.log(`Serving on port: ${port}`))

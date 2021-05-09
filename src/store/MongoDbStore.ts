@@ -15,7 +15,7 @@ class MongoDbStore {
                 "user": config.MONGODB_USER,
                 "password": config.MONGODB_PASSWORD
             },
-            "appname": "home-server",
+            "appname": config.APP_NAME,
         }
     ) {
         this._connectionString = connectionString

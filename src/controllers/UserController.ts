@@ -7,7 +7,7 @@ class UserController {
         this.initUserRouter()
     }
     initUserRouter () {
-        this._router.use(new UserRegistrationController(this._router).getRouter())
+        this._router.use(new UserRegistrationController().getRouter())
     }
     public getRouter () {
         return this._router
