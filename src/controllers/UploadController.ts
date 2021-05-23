@@ -15,10 +15,13 @@ class UploadController {
     initRouter () {
         this._router.post('/', this._uploadMiddleware.single('file'), this.uploadHandler)
     }
-    uploadHandler (req: Request, res: Response) {
+    async uploadHandler (req: Request, res: Response) {
         
-        OSSStore.uploadToBucket(req)
-        res.sendStatus(200)
+        const uploaded: any = await OSSStore.uploadToBucket(req)
+        if (!uploaded) {
+            return res.sendStatus(500)
+        }
+        res.status(200).json(uploaded)
     }
     getRouter () {
         return this._router
