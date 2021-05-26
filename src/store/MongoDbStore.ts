@@ -3,7 +3,7 @@ import config from '../config/config'
 
 
 
-class MongoDbStore {
+export class MongoDbStore {
     _connectionString: string
     _client: MongoClient | null
     _clientConfiguration: Object
