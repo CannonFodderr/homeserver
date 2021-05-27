@@ -15,7 +15,7 @@ export class MongoDbStore {
                 "user": config.MONGODB_USER,
                 "password": config.MONGODB_PASSWORD
             },
-            "appname": "home-server",
+            "appname": "home-server-client",
         }
     ) {
         this._connectionString = connectionString
@@ -27,7 +27,7 @@ export class MongoDbStore {
         return await connect(this._connectionString, this._clientConfiguration)
         .then((connection: MongoClient ) => {
             this._client = connection
-            console.log(`Mongodb connected to ${config.MONGODB_DB_NAME} db`)
+            console.log(`Mongodb connected to ${this._connectionString}`)
             return connection
         })
         .catch((err: Error) => {

@@ -1,13 +1,13 @@
 {
   "name": "home-server",
-  "version": "21.04.3001",
+  "version": "21.05.2801",
   "description": "Personal home server",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./dist/index.js",
     "build": "tsc",
     "serve": "nodemon",
+    "test": "mocha --bail ./dist/test/config/* ./dist/test/mongo/*",
     "test:config": "mocha --bail ./dist/test/config/*",
     "test:mongo": "mocha --bail ./dist/test/mongo/*"
   },

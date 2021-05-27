@@ -1,5 +1,5 @@
 import { validateEmail } from '../../utils/email.utils'
-import { expect, should } from 'chai'
+import { expect } from 'chai'
 import config from '../../config/config'
 
 describe("Config test unit", () => {
@@ -34,6 +34,7 @@ describe("Config test unit", () => {
         expect(config.MONGODB_DB_NAME).to.be.a('string')
         expect(config.MONGODB_USER).to.be.a('string')
         expect(config.MONGODB_PASSWORD).to.be.a('string')
+        expect(config.MONGO_TEST_DB_NAME).to.be.a('string')
     })
 
     it ("Should contain REDIS mandatory keys", () => {

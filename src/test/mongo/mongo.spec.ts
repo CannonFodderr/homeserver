@@ -6,34 +6,38 @@ import config from '../../config/config'
 should()
 
 let dbconnection: MongoClient | null = null
-describe("Mongo test unit", function () {
-    this.timeout(60000)
-    
-    before(async (done) => {
-        const store = new testsStore(`${config.MONGODB_HOST}/${config.MONGODB_DB_NAME}-test`)
+
+describe("Mongo test unit", function () {   
+    before(async () => {
+        const store = new testsStore(`${config.MONGODB_HOST}/admin`)
+        if (!store) return
         dbconnection = await store.connect()
         if (!dbconnection) {
             console.error("%c Unable to connect to mongodb", 'color:red;')
-            done()
-            process.exit(1)
         }
-
-
-        done()
+        return dbconnection
     })
 
-    beforeEach ((done) => {
+    beforeEach (async () => {
         if (!dbconnection) {
             console.log("No db connection available")
-            done()
-            process.exit(1)
+            return null
         }
         // drop tests database
-        dbconnection.db('server-tests').dropDatabase()
+        const dropped = await dbconnection.db(config.MONGO_TEST_DB_NAME).dropDatabase()
+        expect(dropped).true
+        return dropped
     })
     
-    it ("Should connect to mongodb", () => {
-
+    it ("Should create a test collection", async () => {
+        const created = await dbconnection?.db(config.MONGO_TEST_DB_NAME).createCollection('test')
+        should().exist(created)
+        return created
     })
-
+    
+    
+    this.afterAll((done) => {
+        done()
+        process.exit(1)
+    })
 })
